@@ -7,14 +7,20 @@ interface SignInCredencials {
 }
 
 interface AuthContextData {
-  user: object;
+  user: User;
   signIn(credencials: SignInCredencials): Promise<void>;
   signOut(): void;
 }
 
+interface User {
+  name: string;
+  id: string;
+  avatar_url: string;
+}
+
 interface AuthState {
   token: string;
-  user: object;
+  user: User;
 }
 
 // createContext<AuthContext>({} as AuthContext) permite iniciar a criacao do objeto
