@@ -18,8 +18,11 @@ export const HeaderContent = styled.div`
     height: 80px;
   }
 
-  button {
+  .settingsBtn {
     margin-left: auto;
+  }
+
+  button {
     background: transparent;
     border: 0;
 
@@ -27,6 +30,11 @@ export const HeaderContent = styled.div`
       color: #999591;
       width: 20px;
       height: 20px;
+      margin-left: 15px;
+    }
+
+    &:hover {
+      opacity: 0.8;
     }
   }
 `;

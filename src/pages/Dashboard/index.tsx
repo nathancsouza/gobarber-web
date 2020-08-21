@@ -4,7 +4,8 @@ import 'react-day-picker/lib/style.css';
 
 import { isToday, format, parseISO, isAfter } from 'date-fns';
 
-import { FiPower, FiClock } from 'react-icons/fi';
+import { FiPower, FiClock, FiSettings } from 'react-icons/fi';
+import { Link } from 'react-router-dom';
 import {
   Container,
   Header,
@@ -143,6 +144,12 @@ const Dashboard: React.FC = () => {
               <strong>{user.name}</strong>
             </div>
           </Profile>
+
+          <Link className="settingsBtn" to="/profile">
+            <button type="button">
+              <FiSettings />
+            </button>
+          </Link>
 
           <button type="button" onClick={signOut}>
             <FiPower />
