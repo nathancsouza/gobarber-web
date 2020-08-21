@@ -19,6 +19,8 @@ interface ProfileFormData {
   name: string;
   email: string;
   password: string;
+  old_password: string;
+  password_confirmation: string;
 }
 
 const Profile: React.FC = () => {
@@ -37,23 +39,57 @@ const Profile: React.FC = () => {
         const schema = Yup.object().shape({
           name: Yup.string().required('Name required'),
           email: Yup.string().required('Email required').email('Email invalid'),
-          password: Yup.string()
-            .required('Password required')
-            .min(6, 'Minimum 6 digits'),
+          old_password: Yup.string(),
+          password: Yup.string().when('old_password', {
+            is: (val) => !!val.length,
+            then: Yup.string()
+              .required('Password required')
+              .min(6, 'Minimum 6 digits'),
+            otherwise: Yup.string(),
+          }),
+          password_confirmation: Yup.string()
+            .when('old_password', {
+              is: (val) => !!val.length,
+              then: Yup.string().required('Password required'),
+              otherwise: Yup.string(),
+            })
+            .oneOf([Yup.ref('password')], 'Password must match'),
         });
 
         await schema.validate(data, {
           abortEarly: false,
         });
 
-        await api.post('/users', data);
+        const {
+          name,
+          email,
+          old_password,
+          password,
+          password_confirmation,
+        } = data;
 
-        history.push('/');
+        const formData = {
+          name,
+          email,
+          ...(old_password
+            ? {
+                old_password,
+                password,
+                password_confirmation,
+              }
+            : {}),
+        };
+
+        const response = await api.put('/profile', formData);
+
+        updateUser(response.data);
+
+        history.push('/dashboard');
 
         addToast({
           type: 'success',
-          title: 'Cadastro realizado!',
-          description: 'Voce ja pode fazer seu logon no GoBarber',
+          title: 'Profile updated',
+          description: 'Your profile information has been updated.',
         });
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
@@ -66,8 +102,9 @@ const Profile: React.FC = () => {
 
         addToast({
           type: 'error',
-          title: 'Erro no cadastro',
-          description: 'Ocorreu um erro ao fazer o cadastro, tente novamente.',
+          title: 'Update error',
+          description:
+            'An error occurred while updating the profile, please try again.',
         });
       }
     },
@@ -86,7 +123,7 @@ const Profile: React.FC = () => {
 
           addToast({
             type: 'success',
-            title: 'Updated avatar',
+            title: 'Avatar updated',
           });
         });
       }
