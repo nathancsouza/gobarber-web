@@ -88,7 +88,7 @@ const Profile: React.FC = () => {
 
         addToast({
           type: 'success',
-          title: 'Profile updated',
+          title: 'Profile updated successfully',
           description: 'Your profile information has been updated.',
         });
       } catch (err) {
