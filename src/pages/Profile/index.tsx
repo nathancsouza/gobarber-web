@@ -7,6 +7,7 @@ import { Link, useHistory } from 'react-router-dom';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import { Container, Content, AvatarInput } from './styles';
+import defaultAvatar from '../../assets/default-avatar.png';
 
 import api from '../../services/api';
 
@@ -150,7 +151,11 @@ const Profile: React.FC = () => {
           onSubmit={handleSubmit}
         >
           <AvatarInput>
-            <img src={user.avatar_url} alt={user.name} />
+            {user.avatar_url ? (
+              <img src={user.avatar_url} alt={user.name} />
+            ) : (
+              <img src={defaultAvatar} alt={user.name} />
+            )}
 
             <label htmlFor="avatar">
               <FiCamera />
